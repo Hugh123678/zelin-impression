@@ -106,12 +106,26 @@ button:focus-visible {
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 15px;
   font-weight: 800;
   letter-spacing: 0;
   transition:
     color 180ms ease,
     transform 180ms ease;
+}
+
+.brand-mark {
+  width: 24px;
+  height: 24px;
+  display: block;
+  flex: 0 0 24px;
+}
+
+.site-header .brand-name {
+  color: var(--ink);
 }
 
 .brand span {
