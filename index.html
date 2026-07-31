@@ -137,7 +137,7 @@
       <section class="section-wrap work" id="work">
         <div class="section-title">
           <h2>精选作品</h2>
-          <p>8 个项目</p>
+          <a class="section-link" href="works.html">查看更多 <span aria-hidden="true">→</span></a>
         </div>
         <div class="filter-bar" aria-label="作品分类">
           <button class="active" type="button" data-filter="all">全部</button>
@@ -147,116 +147,10 @@
           <button type="button" data-filter="detail">详情页</button>
           <button type="button" data-filter="packaging">包装</button>
           <button type="button" data-filter="print">画册 / 海报</button>
-          <button type="button" data-filter="annual">年报</button>
           <button type="button" data-filter="ui">App / 小程序</button>
-          <button type="button" data-filter="other">其它</button>
         </div>
 
-        <div class="work-grid">
-          <article class="work-card" data-category="brand">
-            <div class="work-visual work-photo">
-              <img src="assets/work/fufuumoon-brand-design.png" alt="FuFuuMoon 品牌设计" />
-            </div>
-            <div class="work-meta">
-              <div>
-                <h3>品牌设计</h3>
-                <p>为 FuFuuMoon 品牌设计一系列物料。</p>
-              </div>
-              <time>2025</time>
-            </div>
-          </article>
-
-          <article class="work-card" data-category="ecommerce">
-            <div class="work-visual work-photo">
-              <img src="assets/work/ionchill-ice-maker-ecommerce.png" alt="电商设计" />
-            </div>
-            <div class="work-meta">
-              <div>
-                <h3>电商设计</h3>
-                <p>让每一次点击，都离成交更近一步。</p>
-              </div>
-              <time>2026</time>
-            </div>
-          </article>
-
-          <article class="work-card" data-category="logo">
-            <div class="work-visual work-photo">
-              <img src="assets/work/logo-design.png" alt="LOGO设计" />
-            </div>
-            <div class="work-meta">
-              <div>
-                <h3>LOGO设计</h3>
-                <p>把您的想法，变成值得骄傲的视觉符号。</p>
-              </div>
-              <time>2026</time>
-            </div>
-          </article>
-
-          <article class="work-card" data-category="print">
-            <div class="work-visual work-photo">
-              <img src="assets/work/yuanlife-oxygen-cabin-brochure.png" alt="画册/三折页设计" />
-            </div>
-            <div class="work-meta">
-              <div>
-                <h3>画册/三折页设计</h3>
-                <p>让翻页的每一瞬，都成为合作的理由。</p>
-              </div>
-              <time>2026</time>
-            </div>
-          </article>
-
-          <article class="work-card" data-category="print">
-            <div class="work-visual work-photo">
-              <img src="assets/work/whale-vision-tech-poster.png" alt="平面/海报设计" />
-            </div>
-            <div class="work-meta">
-              <div>
-                <h3>平面/海报设计</h3>
-                <p>有限的版面，无限的想象。</p>
-              </div>
-              <time>2026</time>
-            </div>
-          </article>
-
-          <article class="work-card" data-category="detail">
-            <div class="work-visual work-photo">
-              <img src="assets/work/smartwatch-qonbink-ecommerce.png" alt="详情页设计" />
-            </div>
-            <div class="work-meta">
-              <div>
-                <h3>详情页设计</h3>
-                <p>排版简洁、格调高级的版式。</p>
-              </div>
-              <time>2026</time>
-            </div>
-          </article>
-
-          <article class="work-card" data-category="ui">
-            <div class="work-visual work-photo">
-              <img src="assets/work/kangyue-mini-program-design.png" alt="康悦同城小程序设计" />
-            </div>
-            <div class="work-meta">
-              <div>
-                <h3>小程序设计</h3>
-                <p>康悦同城小程序设计。</p>
-              </div>
-              <time>2025</time>
-            </div>
-          </article>
-
-          <article class="work-card" data-category="packaging">
-            <div class="work-visual work-photo">
-              <img src="assets/work/bibigrow-milk-packaging.png" alt="包装设计" />
-            </div>
-            <div class="work-meta">
-              <div>
-                <h3>包装设计</h3>
-                <p>把品牌气质，装进每一个盒子里。</p>
-              </div>
-              <time>2026</time>
-            </div>
-          </article>
-        </div>
+        <div class="work-grid" id="featured-work-grid"></div>
       </section>
 
       <section class="section-wrap about" id="about">
@@ -371,6 +265,7 @@
       <p class="copyright">© 2026 泽霖印象. 保留所有权利。</p>
     </footer>
 
+    <script src="works-data.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

@@ -1,3 +1,44 @@
+const workData = window.portfolioWorks || [];
+const featuredGrid = document.querySelector("#featured-work-grid");
+const allWorkGrid = document.querySelector("#all-work-grid");
+const categoryRoot = document.querySelector("#category-root");
+const projectRoot = document.querySelector("#project-root");
+
+const workCardTemplate = (work, linkMode = "category") => {
+  const href =
+    linkMode === "project"
+      ? `project.html?slug=${encodeURIComponent(work.slug)}`
+      : `category.html?category=${encodeURIComponent(work.category)}`;
+  const label = linkMode === "project" ? `查看 ${work.title} 项目详情` : `查看 ${work.categoryLabel}项目集合`;
+
+  return `
+  <a class="work-card" data-category="${work.category}" href="${href}" aria-label="${label}">
+    <div class="work-visual work-photo">
+      <img src="${work.image}" alt="${work.alt}" loading="lazy" />
+    </div>
+    <div class="work-meta">
+      <div>
+        <h3>${work.title}</h3>
+        <p>${work.description}</p>
+      </div>
+      <time>${work.year}</time>
+    </div>
+  </a>
+`;
+};
+
+const renderWorkGrid = (container, works, linkMode = "category") => {
+  if (!container) return;
+  container.innerHTML = works.map((work) => workCardTemplate(work, linkMode)).join("");
+};
+
+renderWorkGrid(
+  featuredGrid,
+  workData.filter((work) => work.featured).slice(0, 8),
+  "category",
+);
+renderWorkGrid(allWorkGrid, workData, "category");
+
 const filterButtons = document.querySelectorAll("[data-filter]");
 const workCards = document.querySelectorAll(".work-card");
 const siteHeader = document.querySelector(".site-header");
@@ -12,6 +53,139 @@ const staggerGroups = [
   ".contact-grid a",
   ".tag-list span",
 ];
+
+const categoryCopy = {
+  brand: "品牌识别与应用物料的完整视觉探索。",
+  logo: "从概念提炼到视觉符号，建立清晰的品牌记忆点。",
+  ecommerce: "围绕产品卖点与购买决策，构建更接近成交的视觉路径。",
+  detail: "用清晰的版式与内容节奏，让产品价值更快被理解。",
+  packaging: "把品牌气质、产品信息与货架表现装进每一个触点。",
+  print: "在纸面、展会与传播场景中，探索信息与视觉的平衡。",
+  ui: "从移动端界面到本地生活场景，建立轻量的使用体验。",
+};
+
+function renderCategoryPage() {
+  if (!categoryRoot) return;
+
+  const category = new URLSearchParams(window.location.search).get("category");
+  const categoryWorks = workData.filter((work) => work.category === category);
+  const categoryLabel = categoryWorks[0]?.categoryLabel || "作品分类";
+
+  if (!categoryWorks.length) {
+    categoryRoot.innerHTML = `
+      <section class="section-wrap project-missing">
+        <p class="eyebrow">作品分类</p>
+        <h1>这个分类暂时还没有项目。</h1>
+        <a class="button button-dark" href="works.html">返回全部作品</a>
+      </section>
+    `;
+    return;
+  }
+
+  document.title = `${categoryLabel} | 泽霖印象`;
+  categoryRoot.innerHTML = `
+    <section class="section-wrap category-page-intro">
+      <a class="back-link" href="works.html">← 返回全部作品</a>
+      <p class="eyebrow">${categoryLabel} / ${categoryWorks.length} 个项目</p>
+      <h1>${categoryLabel}<br />让同一种专业，拥有不同的表达。</h1>
+      <p class="page-lead">${categoryCopy[category] || "浏览这一类别下的项目案例与视觉探索。"}</p>
+    </section>
+    <section class="section-wrap category-projects" aria-labelledby="category-projects-title">
+      <div class="section-title">
+        <h2 id="category-projects-title">${categoryLabel}项目</h2>
+        <p>${categoryWorks.length} 个项目</p>
+      </div>
+      <div class="work-grid" id="category-work-grid"></div>
+    </section>
+  `;
+
+  renderWorkGrid(document.querySelector("#category-work-grid"), categoryWorks, "project");
+  categoryRoot.querySelectorAll(".section-wrap").forEach((section) => section.classList.add("reveal"));
+}
+
+renderCategoryPage();
+
+function renderProjectPage() {
+  if (!projectRoot) return;
+
+  const slug = new URLSearchParams(window.location.search).get("slug");
+  const workIndex = workData.findIndex((work) => work.slug === slug);
+  const work = workData[workIndex];
+
+  if (!work) {
+    projectRoot.innerHTML = `
+      <section class="section-wrap project-missing">
+        <p class="eyebrow">项目不存在</p>
+        <h1>这个项目还没有找到。</h1>
+        <a class="button button-dark" href="works.html">返回全部作品</a>
+      </section>
+    `;
+    return;
+  }
+
+  const previousWork = workData[(workIndex - 1 + workData.length) % workData.length];
+  const nextWork = workData[(workIndex + 1) % workData.length];
+  const detailImages = work.detailImages || [];
+  const gallery = detailImages.length
+    ? detailImages
+        .map(
+          (image, index) => `
+            <figure class="project-gallery-item">
+              <img src="${image.src}" alt="${image.alt || `${work.title} 详情配图 ${index + 1}`}" loading="lazy" />
+            </figure>
+          `,
+        )
+        .join("")
+    : [1, 2, 3]
+        .map(
+          (index) => `
+            <div class="project-gallery-placeholder">
+              <span>DETAIL IMAGE 0${index}</span>
+              <strong>详情配图待补充</strong>
+              <p>可放置项目过程图、设计细节或应用场景图。</p>
+            </div>
+          `,
+        )
+        .join("");
+
+  document.title = `${work.title} | 泽霖印象`;
+  projectRoot.innerHTML = `
+    <section class="section-wrap project-overview">
+      <a class="back-link" href="category.html?category=${encodeURIComponent(work.category)}">← 返回${work.categoryLabel}项目</a>
+      <div class="project-overview-copy">
+        <p class="eyebrow">项目概览</p>
+        <h2>${work.detailIntro}</h2>
+      </div>
+      <dl class="project-facts">
+        <div><dt>项目类型</dt><dd>${work.categoryLabel}</dd></div>
+        <div><dt>服务内容</dt><dd>${work.service}</dd></div>
+        <div><dt>合作品牌</dt><dd>${work.client}</dd></div>
+        <div><dt>项目年份</dt><dd>${work.year}</dd></div>
+      </dl>
+    </section>
+
+    <section class="section-wrap project-gallery-section">
+      <div class="section-title">
+        <h2>项目细节</h2>
+        <p>过程与应用展示</p>
+      </div>
+      <div class="project-gallery project-gallery-${work.slug}">${gallery}</div>
+    </section>
+
+    <nav class="section-wrap project-pagination" aria-label="项目切换">
+      <a class="project-pagination-link" href="project.html?slug=${previousWork.slug}">
+        <span>上一个项目</span>
+        <strong>${previousWork.title}</strong>
+      </a>
+      <a class="project-pagination-link project-pagination-next" href="project.html?slug=${nextWork.slug}">
+        <span>下一个项目</span>
+        <strong>${nextWork.title} →</strong>
+      </a>
+    </nav>
+  `;
+}
+
+renderProjectPage();
 
 revealSections.forEach((section) => section.classList.add("reveal"));
 

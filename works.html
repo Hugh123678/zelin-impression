@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="泽霖印象全部作品，包含品牌设计、LOGO、电商、包装、画册、海报、详情页与小程序设计。"
+    />
+    <title>全部作品 | 泽霖印象</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="works">
+    <header class="site-header">
+      <a class="brand" href="index.html#top" aria-label="泽霖印象首页">
+        <img class="brand-mark" src="assets/brand-mark.svg" alt="" aria-hidden="true" />
+        <span class="brand-name">泽霖印象</span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="index.html#services">服务</a>
+        <a class="active" href="works.html">作品</a>
+        <a href="index.html#about">关于</a>
+        <a href="index.html#contact">联系</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="section-wrap works-page-intro">
+        <a class="back-link" href="index.html#work">← 返回首页精选作品</a>
+        <p class="eyebrow">全部作品</p>
+        <h1>每一个项目，<br />都值得被完整看见。</h1>
+        <p class="page-lead">
+          浏览泽霖印象的全部设计项目，了解不同品牌、产品与传播场景下的视觉探索。
+        </p>
+      </section>
+
+      <section class="section-wrap all-works" aria-labelledby="all-works-title">
+        <div class="section-title">
+          <h2 id="all-works-title">全部作品</h2>
+          <p>8 个项目</p>
+        </div>
+        <div class="filter-bar" aria-label="作品分类">
+          <button class="active" type="button" data-filter="all">全部</button>
+          <button type="button" data-filter="brand">品牌设计</button>
+          <button type="button" data-filter="logo">LOGO</button>
+          <button type="button" data-filter="ecommerce">电商</button>
+          <button type="button" data-filter="detail">详情页</button>
+          <button type="button" data-filter="packaging">包装</button>
+          <button type="button" data-filter="print">画册 / 海报</button>
+          <button type="button" data-filter="ui">App / 小程序</button>
+        </div>
+        <div class="work-grid" id="all-work-grid"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <a class="brand" href="index.html#top">泽霖印象</a>
+        <p>以视觉留印象，用设计筑品牌。</p>
+      </div>
+      <div class="footer-links">
+        <a href="index.html#contact">联系</a>
+        <a href="works.html">作品</a>
+        <a href="index.html#services">服务</a>
+      </div>
+      <p class="copyright">© 2026 泽霖印象. 保留所有权利。</p>
+    </footer>
+
+    <script src="works-data.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
