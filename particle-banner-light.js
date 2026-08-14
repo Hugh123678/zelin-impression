@@ -133,6 +133,34 @@
       ctx.fillRect(0, 0, width, height);
     });
 
+    const beamCount = width < 760 ? 4 : 7;
+    for (let index = 0; index < beamCount; index += 1) {
+      const phase = index * 0.73;
+      const progress = (time * (0.045 + index * 0.004) + phase) % 1;
+      const beamX = -width * 0.2 + progress * width * 1.38;
+      const beamY = height * (0.08 + (index % 4) * 0.16) + Math.sin(time * 0.18 + phase) * height * 0.05;
+      const beamWidth = width * (0.13 + (index % 3) * 0.035);
+      const beamLength = height * 1.45;
+      const gradient = ctx.createLinearGradient(-beamWidth, 0, beamWidth, 0);
+      gradient.addColorStop(0, "rgba(255,255,255,0)");
+      gradient.addColorStop(0.28, "rgba(255,255,255,0.16)");
+      gradient.addColorStop(0.5, index % 2 ? "rgba(130, 177, 238, 0.22)" : "rgba(255, 222, 150, 0.18)");
+      gradient.addColorStop(0.72, "rgba(255,255,255,0.16)");
+      gradient.addColorStop(1, "rgba(255,255,255,0)");
+
+      ctx.save();
+      ctx.globalAlpha = 0.48;
+      ctx.translate(beamX, beamY);
+      ctx.rotate(-0.58 + Math.sin(time * 0.14 + phase) * 0.04);
+      ctx.fillStyle = gradient;
+      ctx.filter = "blur(22px)";
+      ctx.fillRect(-beamWidth, -beamLength * 0.5, beamWidth * 2, beamLength);
+      ctx.filter = "none";
+      ctx.globalAlpha = 0.16;
+      ctx.fillRect(-beamWidth * 0.2, -beamLength * 0.48, beamWidth * 0.4, beamLength * 0.96);
+      ctx.restore();
+    }
+
     if (pointer.active) {
       const cx = pointer.smoothX * width;
       const cy = pointer.smoothY * height;
@@ -207,6 +235,8 @@
 
   const particles = [];
   let logoReady = false;
+  let logoCenterX = 0;
+  let logoCenterY = 0;
 
   function loadLogoParticles() {
     const image = new Image();
@@ -275,6 +305,8 @@
     const logoSize = Math.min(width * 0.34, 390);
     const cx = width * (width < 760 ? 0.72 : 0.78);
     const cy = height * (width < 760 ? 0.42 : 0.47);
+    logoCenterX = cx;
+    logoCenterY = cy;
     particles.forEach((particle) => {
       particle.targetX = cx + particle.tx * logoSize * 0.5;
       particle.targetY = cy + particle.ty * logoSize * 0.5;
@@ -294,13 +326,24 @@
     const eased = 1 - Math.pow(1 - assembly, 3);
     const mx = pointer.smoothX * width;
     const my = pointer.smoothY * height;
+    const breathe = 1 + Math.sin(time * 0.62) * 0.018;
+    const floatX = Math.sin(time * 0.34) * 8;
+    const floatY = Math.cos(time * 0.41) * 7;
+    const rotation = Math.sin(time * 0.22) * 0.025;
+    const cos = Math.cos(rotation);
+    const sin = Math.sin(rotation);
 
     particles.forEach((particle, index) => {
       let x = particle.scatterX + (particle.targetX - particle.scatterX) * eased;
       let y = particle.scatterY + (particle.targetY - particle.scatterY) * eased;
       const loose = (0.25 + particle.edge * 0.75) * eased;
-      x += Math.sin(time * 0.5 + particle.seed) * 2.8 * loose;
-      y += Math.cos(time * 0.42 + particle.seed * 0.7) * 2.8 * loose;
+      x += Math.sin(time * 0.5 + particle.seed) * 3.6 * loose;
+      y += Math.cos(time * 0.42 + particle.seed * 0.7) * 3.6 * loose;
+
+      const ox = (x - logoCenterX) * breathe;
+      const oy = (y - logoCenterY) * breathe;
+      x = logoCenterX + ox * cos - oy * sin + floatX * eased;
+      y = logoCenterY + ox * sin + oy * cos + floatY * eased;
 
       if (pointer.active && eased > 0.8) {
         const dx = x - mx;
@@ -314,10 +357,10 @@
         }
       }
 
-      const shine = 0.72 + 0.28 * Math.sin(time * 1.5 + particle.tx * 7 + particle.ty * 3);
+      const shine = 0.68 + 0.32 * Math.sin(time * 1.5 + particle.tx * 7 + particle.ty * 3);
       ctx.globalAlpha = particle.opacity * (0.15 + eased * 0.72) * shine;
       ctx.fillStyle = "#25466f";
-      const size = 2.1 + particle.edge * 1.2;
+      const size = (2.1 + particle.edge * 1.2) * (0.96 + Math.sin(time * 0.9 + particle.seed) * 0.05);
       ctx.fillRect(x - size / 2, y - size / 2, size, size);
     });
     ctx.globalAlpha = 1;
