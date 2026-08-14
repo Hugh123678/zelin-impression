@@ -287,6 +287,7 @@
     const { ctx } = logo;
     const { width, height } = bounds;
     ctx.clearRect(0, 0, width, height);
+    if (width <= 680) return;
     if (!logoReady) return;
 
     const assembly = Math.min(1, time / 2.5);

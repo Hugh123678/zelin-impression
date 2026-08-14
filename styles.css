@@ -1684,6 +1684,10 @@ button:focus-visible {
     width: min(100%, 720px);
   }
 
+  .particle-logo-canvas {
+    opacity: 0.42;
+  }
+
   .hero-media {
     position: relative;
     top: auto;
@@ -1717,6 +1721,14 @@ button:focus-visible {
   .hero {
     min-height: 600px;
     padding: 96px 16px 40px;
+  }
+
+  .particle-grid-canvas {
+    opacity: 0.34;
+  }
+
+  .particle-logo-canvas {
+    display: none;
   }
 
   .hero-media {
