@@ -29,7 +29,7 @@
     const ctx = canvas.getContext("2d", { willReadFrequently: false });
     const resize = () => {
       const rect = hero.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.35);
       canvas.width = Math.max(1, Math.round(rect.width * dpr));
       canvas.height = Math.max(1, Math.round(rect.height * dpr));
       canvas.style.width = `${rect.width}px`;
@@ -102,71 +102,27 @@
     pointer.smoothY += (pointer.y - pointer.smoothY) * 0.08;
 
     ctx.clearRect(0, 0, width, height);
-    const bg = ctx.createLinearGradient(0, 0, width, height);
-    bg.addColorStop(0, "#fbfcfe");
-    bg.addColorStop(0.44, "#edf6ff");
-    bg.addColorStop(1, "#f7f9fc");
-    ctx.fillStyle = bg;
+    ctx.fillStyle = "#f9fbfd";
     ctx.fillRect(0, 0, width, height);
 
-    const blobs = [
-      [0.62, 0.12, 0.38, "#d7efff", 0.52, 0.18],
-      [0.82, 0.36, 0.42, "#c4dcfb", 0.38, 0.12],
-      [0.46, 0.76, 0.34, "#cae8ff", 0.46, 0.2],
-      [0.72, 0.58, 0.24, "#f8e8bf", 0.22, 0.16],
-    ];
-
-    blobs.forEach(([x, y, radius, color, alpha, phase], index) => {
-      const driftX = Math.sin(time * (0.25 + index * 0.07) + phase * 8) * width * 0.035;
-      const driftY = Math.cos(time * (0.18 + index * 0.06) + phase * 5) * height * 0.035;
-      const mx = pointer.active ? (pointer.smoothX - 0.5) * width * 0.08 : 0;
-      const my = pointer.active ? (pointer.smoothY - 0.5) * height * 0.06 : 0;
-      const cx = x * width + driftX + mx;
-      const cy = y * height + driftY + my;
-      const r = Math.max(width, height) * radius;
-      const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-      gradient.addColorStop(0, color);
-      gradient.addColorStop(0.52, color);
-      gradient.addColorStop(1, "rgba(255,255,255,0)");
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, width, height);
-    });
-
-    const beamCount = width < 760 ? 4 : 7;
-    for (let index = 0; index < beamCount; index += 1) {
-      const phase = index * 0.73;
-      const progress = (time * (0.045 + index * 0.004) + phase) % 1;
-      const beamX = -width * 0.2 + progress * width * 1.38;
-      const beamY = height * (0.08 + (index % 4) * 0.16) + Math.sin(time * 0.18 + phase) * height * 0.05;
-      const beamWidth = width * (0.13 + (index % 3) * 0.035);
-      const beamLength = height * 1.45;
-      const gradient = ctx.createLinearGradient(-beamWidth, 0, beamWidth, 0);
-      gradient.addColorStop(0, "rgba(255,255,255,0)");
-      gradient.addColorStop(0.28, "rgba(255,255,255,0.16)");
-      gradient.addColorStop(0.5, index % 2 ? "rgba(130, 177, 238, 0.22)" : "rgba(255, 222, 150, 0.18)");
-      gradient.addColorStop(0.72, "rgba(255,255,255,0.16)");
-      gradient.addColorStop(1, "rgba(255,255,255,0)");
-
-      ctx.save();
-      ctx.globalAlpha = 0.48;
-      ctx.translate(beamX, beamY);
-      ctx.rotate(-0.58 + Math.sin(time * 0.14 + phase) * 0.04);
-      ctx.fillStyle = gradient;
-      ctx.filter = "blur(22px)";
-      ctx.fillRect(-beamWidth, -beamLength * 0.5, beamWidth * 2, beamLength);
-      ctx.filter = "none";
-      ctx.globalAlpha = 0.16;
-      ctx.fillRect(-beamWidth * 0.2, -beamLength * 0.48, beamWidth * 0.4, beamLength * 0.96);
-      ctx.restore();
-    }
+    const focusX = width * 0.78 + Math.sin(time * 0.24) * 12;
+    const focusY = height * 0.45 + Math.cos(time * 0.28) * 9;
+    const pulse = 0.5 + Math.sin(time * 0.72) * 0.5;
+    const focusRadius = Math.min(width * 0.3, 470);
+    const focus = ctx.createRadialGradient(focusX, focusY, 0, focusX, focusY, focusRadius);
+    focus.addColorStop(0, `rgba(178, 217, 247, ${0.2 + pulse * 0.035})`);
+    focus.addColorStop(0.34, "rgba(214, 234, 250, 0.13)");
+    focus.addColorStop(0.72, "rgba(232, 242, 250, 0.045)");
+    focus.addColorStop(1, "rgba(249, 251, 253, 0)");
+    ctx.fillStyle = focus;
+    ctx.fillRect(0, 0, width, height);
 
     if (pointer.active) {
       const cx = pointer.smoothX * width;
       const cy = pointer.smoothY * height;
-      const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 240);
-      glow.addColorStop(0, "rgba(255, 214, 132, 0.26)");
-      glow.addColorStop(0.44, "rgba(91, 142, 214, 0.16)");
+      const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 190);
+      glow.addColorStop(0, "rgba(183, 216, 244, 0.12)");
+      glow.addColorStop(0.48, "rgba(210, 231, 248, 0.055)");
       glow.addColorStop(1, "rgba(255,255,255,0)");
       ctx.globalAlpha = 1;
       ctx.fillStyle = glow;
@@ -200,12 +156,14 @@
       point.y += point.vy;
     });
 
-    ctx.strokeStyle = "rgba(34, 65, 112, 0.07)";
-    ctx.lineWidth = 0.5;
+    ctx.lineWidth = 0.55;
     for (let row = 0; row < gridRows; row += 1) {
       for (let col = 0; col < gridCols - 1; col += 1) {
         const a = gridPoints[row * gridCols + col];
         const b = gridPoints[row * gridCols + col + 1];
+        const fade = Math.max(0, Math.min(1, (a.x / width - 0.48) / 0.2));
+        if (fade <= 0) continue;
+        ctx.strokeStyle = `rgba(44, 82, 125, ${0.045 * fade})`;
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
@@ -216,6 +174,9 @@
       for (let row = 0; row < gridRows - 1; row += 1) {
         const a = gridPoints[row * gridCols + col];
         const b = gridPoints[(row + 1) * gridCols + col];
+        const fade = Math.max(0, Math.min(1, (a.x / width - 0.48) / 0.2));
+        if (fade <= 0) continue;
+        ctx.strokeStyle = `rgba(44, 82, 125, ${0.045 * fade})`;
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
@@ -224,10 +185,12 @@
     }
 
     gridPoints.forEach((point) => {
-      const near = pointer.active ? Math.max(0, 1 - Math.hypot(point.x - mx, point.y - my) / 150) : 0;
-      const size = 1.7 + near * 2.1;
-      ctx.globalAlpha = 0.16 + near * 0.38;
-      ctx.fillStyle = "#2c528a";
+      const fade = Math.max(0, Math.min(1, (point.x / width - 0.48) / 0.2));
+      if (fade <= 0) return;
+      const near = pointer.active ? Math.max(0, 1 - Math.hypot(point.x - mx, point.y - my) / 180) : 0;
+      const size = 1.35 + near * 1.8;
+      ctx.globalAlpha = fade * (0.1 + near * 0.32);
+      ctx.fillStyle = "#315d8a";
       ctx.fillRect(point.x - size / 2, point.y - size / 2, size, size);
     });
     ctx.globalAlpha = 1;
@@ -319,17 +282,17 @@
     const { ctx } = logo;
     const { width, height } = bounds;
     ctx.clearRect(0, 0, width, height);
-    if (width <= 680) return;
+    if (width <= 920) return;
     if (!logoReady) return;
 
     const assembly = Math.min(1, time / 2.5);
     const eased = 1 - Math.pow(1 - assembly, 3);
     const mx = pointer.smoothX * width;
     const my = pointer.smoothY * height;
-    const breathe = 1 + Math.sin(time * 0.62) * 0.018;
-    const floatX = Math.sin(time * 0.34) * 8;
-    const floatY = Math.cos(time * 0.41) * 7;
-    const rotation = Math.sin(time * 0.22) * 0.025;
+    const breathe = 1 + Math.sin(time * 0.7) * 0.026;
+    const floatX = Math.sin(time * 0.38) * 11;
+    const floatY = Math.cos(time * 0.46) * 9;
+    const rotation = Math.sin(time * 0.26) * 0.032;
     const cos = Math.cos(rotation);
     const sin = Math.sin(rotation);
 
@@ -337,30 +300,38 @@
       let x = particle.scatterX + (particle.targetX - particle.scatterX) * eased;
       let y = particle.scatterY + (particle.targetY - particle.scatterY) * eased;
       const loose = (0.25 + particle.edge * 0.75) * eased;
-      x += Math.sin(time * 0.5 + particle.seed) * 3.6 * loose;
-      y += Math.cos(time * 0.42 + particle.seed * 0.7) * 3.6 * loose;
+      x += Math.sin(time * 0.58 + particle.seed) * 5.2 * loose;
+      y += Math.cos(time * 0.48 + particle.seed * 0.7) * 5.2 * loose;
 
       const ox = (x - logoCenterX) * breathe;
       const oy = (y - logoCenterY) * breathe;
       x = logoCenterX + ox * cos - oy * sin + floatX * eased;
       y = logoCenterY + ox * sin + oy * cos + floatY * eased;
 
+      const radialDistance = Math.min(1, Math.hypot(ox, oy) / 240);
+      const waveClock = ((time - 3.1) % 6.8 + 6.8) % 6.8;
+      const waveDistance = waveClock * 0.46;
+      const wave = Math.exp(-Math.pow(radialDistance - waveDistance, 2) / 0.018) * (waveClock < 2.9 ? 1 : 0);
+      const outwardLength = Math.hypot(ox, oy) || 1;
+      x += (ox / outwardLength) * wave * (10 + particle.edge * 12);
+      y += (oy / outwardLength) * wave * (10 + particle.edge * 12);
+
       if (pointer.active && eased > 0.8) {
         const dx = x - mx;
         const dy = y - my;
         const dist = Math.hypot(dx, dy);
-        if (dist < 190 && dist > 0.1) {
-          const force = Math.pow(1 - dist / 190, 3) * 66;
+        if (dist < 230 && dist > 0.1) {
+          const force = Math.pow(1 - dist / 230, 2.6) * 88;
           const noise = Math.sin(index * 0.37 + time * 0.5) * 1.1;
           x += (dx / dist) * force + Math.cos(noise) * force * 0.18;
           y += (dy / dist) * force + Math.sin(noise) * force * 0.18;
         }
       }
 
-      const shine = 0.68 + 0.32 * Math.sin(time * 1.5 + particle.tx * 7 + particle.ty * 3);
-      ctx.globalAlpha = particle.opacity * (0.15 + eased * 0.72) * shine;
-      ctx.fillStyle = "#25466f";
-      const size = (2.1 + particle.edge * 1.2) * (0.96 + Math.sin(time * 0.9 + particle.seed) * 0.05);
+      const shine = 0.76 + 0.24 * Math.sin(time * 1.7 + particle.tx * 7 + particle.ty * 3);
+      ctx.globalAlpha = particle.opacity * (0.3 + eased * 0.66) * shine;
+      ctx.fillStyle = particle.edge > 0.42 ? "#173e66" : "#285d8d";
+      const size = (2.35 + particle.edge * 1.25 + wave * 0.45) * (0.96 + Math.sin(time * 0.95 + particle.seed) * 0.06);
       ctx.fillRect(x - size / 2, y - size / 2, size, size);
     });
     ctx.globalAlpha = 1;
@@ -371,7 +342,7 @@
 
   let start = performance.now();
   function render(now) {
-    const time = (now - start) * 0.001;
+    const time = prefersReduced ? 8 : (now - start) * 0.001;
     drawFluid(time);
     drawGrid();
     drawLogo(time);

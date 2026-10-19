@@ -172,7 +172,7 @@ button:focus-visible {
   min-height: 620px;
   padding: 118px max(24px, calc((100vw - 1160px) / 2)) 36px;
   overflow: hidden;
-  background: #f7f9fc;
+  background: #f9fbfd;
 }
 
 .hero::before {
@@ -181,8 +181,8 @@ button:focus-visible {
   z-index: 3;
   content: "";
   background:
-    linear-gradient(90deg, rgba(247, 249, 252, 0.98) 0%, rgba(247, 249, 252, 0.78) 38%, rgba(247, 249, 252, 0.18) 67%, rgba(247, 249, 252, 0.72) 100%),
-    linear-gradient(180deg, rgba(247, 249, 252, 0.06) 0%, rgba(247, 249, 252, 0) 60%, #f7f9fc 100%);
+    linear-gradient(90deg, rgba(249, 251, 253, 0.99) 0%, rgba(249, 251, 253, 0.9) 38%, rgba(249, 251, 253, 0.18) 61%, rgba(249, 251, 253, 0) 78%),
+    linear-gradient(180deg, rgba(249, 251, 253, 0) 62%, #f9fbfd 100%);
   pointer-events: none;
 }
 
@@ -191,7 +191,9 @@ button:focus-visible {
   inset: 0;
   z-index: 1;
   content: "";
-  background: radial-gradient(circle at 76% 42%, rgba(84, 128, 190, 0.12), transparent 34%);
+  background:
+    radial-gradient(circle at 78% 45%, rgba(121, 174, 226, 0.1), transparent 25%),
+    radial-gradient(circle at 78% 45%, rgba(255, 255, 255, 0) 32%, rgba(249, 251, 253, 0.42) 68%);
   pointer-events: none;
 }
 
@@ -212,15 +214,14 @@ button:focus-visible {
 
 .particle-grid-canvas {
   z-index: 1;
-  opacity: 0.58;
-  mix-blend-mode: multiply;
+  opacity: 0.72;
   mask-image: linear-gradient(#000 0%, #000 72%, transparent 100%);
   -webkit-mask-image: linear-gradient(#000 0%, #000 72%, transparent 100%);
 }
 
 .particle-logo-canvas {
   z-index: 2;
-  mix-blend-mode: multiply;
+  filter: drop-shadow(0 18px 38px rgba(31, 79, 124, 0.08));
 }
 
 .beams-canvas {
@@ -656,13 +657,13 @@ button:focus-visible {
 .process-list > div:hover,
 .process-list > div:active {
   border-color: #d8cec4;
-  background: #fffdfa;
+  background: #f9fbfc;
 }
 
 .process-list > div:hover,
 .process-list > div:active {
   border-color: #d8cec4;
-  background: #fffdfa;
+  background: #f9fbfc;
 }
 
 .process-list > div:hover .process-card-top,
@@ -1578,7 +1579,7 @@ button:focus-visible {
 .contact-grid a:hover,
 .contact-grid a:active {
   border-color: #c9beb3;
-  background: #fffdfa;
+  background: #f9fbfc;
 }
 
 .contact-grid a:active {
@@ -1685,7 +1686,11 @@ button:focus-visible {
   }
 
   .particle-logo-canvas {
-    opacity: 0.42;
+    display: none;
+  }
+
+  .particle-grid-canvas {
+    opacity: 0.3;
   }
 
   .hero-media {

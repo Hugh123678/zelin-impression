@@ -61,6 +61,58 @@ window.portfolioWorks = [
     ],
   },
   {
+    slug: "k301-camera-detail-page",
+    featured: true,
+    category: "ecommerce",
+    categoryLabel: "电商",
+    year: "2026",
+    title: "K301摄像头详情页",
+    description: "租房免打孔摄像头，住家更安心。",
+    client: "K301摄像头",
+    service: "产品详情页 / 电商视觉",
+    image: "assets/work/image-syt.png",
+    alt: "K301免打孔摄像头电商详情页",
+    detailIntro: "围绕免打孔安装、租房适用与居家守护等核心卖点，建立清晰可信的电商详情页视觉表达。",
+    detailImages: [
+      {
+        src: "assets/work/details/jssxt/x1.png",
+        alt: "K301摄像头详情页免打孔安装展示",
+      },
+      {
+        src: "assets/work/details/jssxt/x2.png",
+        alt: "K301摄像头详情页产品特点展示",
+      },
+      {
+        src: "assets/work/details/jssxt/x3.png",
+        alt: "K301摄像头详情页使用场景展示",
+      },
+      {
+        src: "assets/work/details/jssxt/x4.png",
+        alt: "K301摄像头详情页功能信息展示",
+      },
+      {
+        src: "assets/work/details/jssxt/x5.png",
+        alt: "K301摄像头详情页画面与监控功能展示",
+      },
+      {
+        src: "assets/work/details/jssxt/x6.png",
+        alt: "K301摄像头详情页居家守护场景展示",
+      },
+      {
+        src: "assets/work/details/jssxt/x7.png",
+        alt: "K301摄像头详情页产品细节展示",
+      },
+      {
+        src: "assets/work/details/jssxt/x8.png",
+        alt: "K301摄像头详情页安装方式展示",
+      },
+      {
+        src: "assets/work/details/jssxt/x9.png",
+        alt: "K301摄像头详情页规格与服务信息展示",
+      },
+    ],
+  },
+  {
     slug: "logo-design",
     featured: true,
     category: "logo",
@@ -135,8 +187,8 @@ window.portfolioWorks = [
   {
     slug: "graphic-poster-design",
     featured: true,
-    category: "print",
-    categoryLabel: "海报",
+    category: "detail",
+    categoryLabel: "图文广告设计",
     year: "2026",
     title: "平面/海报设计",
     description: "有限的版面，无限的想象。",
@@ -159,10 +211,10 @@ window.portfolioWorks = [
   {
     slug: "detail-page-design",
     featured: true,
-    category: "detail",
-    categoryLabel: "详情页",
+    category: "ecommerce",
+    categoryLabel: "电商",
     year: "2026",
-    title: "详情页设计",
+    title: "Watch 详情页",
     description: "排版简洁、格调高级的版式。",
     client: "Qonbink",
     service: "产品详情页 / 电商视觉",
@@ -200,7 +252,7 @@ window.portfolioWorks = [
     slug: "kangyue-mini-program-design",
     featured: true,
     category: "ui",
-    categoryLabel: "App / 小程序",
+    categoryLabel: "界面设计",
     year: "2025",
     title: "小程序设计",
     description: "康悦同城小程序设计。",
@@ -251,8 +303,8 @@ window.portfolioWorks = [
   {
     slug: "travel-detail-page-design",
     featured: false,
-    category: "detail",
-    categoryLabel: "详情页",
+    category: "visual",
+    categoryLabel: "视觉设计",
     year: "2026",
     title: "旅游详情页",
     description: "把旅途风光，藏进每一页细节里。",

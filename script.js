@@ -32,15 +32,20 @@ const renderWorkGrid = (container, works, linkMode = "category") => {
   container.innerHTML = works.map((work) => workCardTemplate(work, linkMode)).join("");
 };
 
-renderWorkGrid(
-  featuredGrid,
-  workData.filter((work) => work.featured).slice(0, 8),
-  "category",
-);
+const featuredWorks = workData.filter((work) => work.featured);
+const deferredHomepageSlugs = new Set(["k301-camera-detail-page"]);
+const orderedFeaturedWorks = [
+  ...featuredWorks.filter((work) => !deferredHomepageSlugs.has(work.slug)),
+  ...featuredWorks.filter((work) => deferredHomepageSlugs.has(work.slug)),
+];
+
+renderWorkGrid(featuredGrid, orderedFeaturedWorks, "category");
 renderWorkGrid(allWorkGrid, workData, "category");
 
 const filterButtons = document.querySelectorAll("[data-filter]");
 const workCards = document.querySelectorAll(".work-card");
+const featuredWorkCards = Array.from(featuredGrid?.querySelectorAll(".work-card") || []);
+const homepageAllLimit = 8;
 const siteHeader = document.querySelector(".site-header");
 const revealSections = document.querySelectorAll(".section-wrap, .site-footer");
 const beamsCanvas = document.querySelector(".beams-canvas");
@@ -57,10 +62,11 @@ const staggerGroups = [
 const categoryCopy = {
   brand: "品牌识别与应用物料的完整视觉探索。",
   logo: "从概念提炼到视觉符号，建立清晰的品牌记忆点。",
-  ecommerce: "围绕产品卖点与购买决策，构建更接近成交的视觉路径。",
-  detail: "用清晰的版式与内容节奏，让产品价值更快被理解。",
+  ecommerce: "围绕商品主图、详情页与购买决策，构建更接近成交的视觉路径。",
+  visual: "以主题画面、信息编排与场景氛围，形成完整而有吸引力的视觉表达。",
+  detail: "覆盖海报、展板、门头与喷绘等线上线下图文广告视觉。",
   packaging: "把品牌气质、产品信息与货架表现装进每一个触点。",
-  print: "在纸面、展会与传播场景中，探索信息与视觉的平衡。",
+  print: "通过画册与折页设计，在纸面中建立清晰的信息层级与阅读节奏。",
   ui: "从移动端界面到本地生活场景，建立轻量的使用体验。",
 };
 
@@ -306,7 +312,7 @@ if (beamsCanvas) {
 }
 
 function initHeroSequence(frame) {
-  const frameSources = Array.from({ length: 8 }, (_, index) => `sppt/${index + 1}.png`);
+  const frameSources = Array.from({ length: 8 }, (_, index) => `sppt/${index + 1}.png?v=1.2.1`);
   const preloadedFrames = frameSources.map((src) => {
     const image = new Image();
     image.src = src;
@@ -353,21 +359,28 @@ if (heroSequenceFrame && !prefersReducedMotion) {
   initHeroSequence(heroSequenceFrame);
 }
 
+const applyWorkFilter = (filter) => {
+  workCards.forEach((card) => {
+    const exceedsHomepageLimit =
+      filter === "all" && featuredGrid?.contains(card) && featuredWorkCards.indexOf(card) >= homepageAllLimit;
+    const isMatch = (filter === "all" || card.dataset.category === filter) && !exceedsHomepageLimit;
+    card.classList.toggle("is-hidden", !isMatch);
+
+    if (isMatch) {
+      card.classList.remove("is-visible");
+      requestAnimationFrame(() => card.classList.add("is-visible"));
+    }
+  });
+};
+
+if (featuredGrid) applyWorkFilter("all");
+
 filterButtons.forEach((button) => {
   button.addEventListener("click", () => {
     const filter = button.dataset.filter;
 
     filterButtons.forEach((item) => item.classList.remove("active"));
     button.classList.add("active");
-
-    workCards.forEach((card) => {
-      const isMatch = filter === "all" || card.dataset.category === filter;
-      card.classList.toggle("is-hidden", !isMatch);
-
-      if (isMatch) {
-        card.classList.remove("is-visible");
-        requestAnimationFrame(() => card.classList.add("is-visible"));
-      }
-    });
+    applyWorkFilter(filter);
   });
 });
